@@ -1,0 +1,73 @@
+Sample Data at a Consistent Rate - Use a fixed sampling rate (e.g., 100 Hz) to match the Python script's SAMPLING_RATE value. Use a timer or a delay() function to enforce consistent intervals between sensor readings.
+
+Read from the IMU - Read accelerometer and gyroscope values. Acceleration in x, y, z (g or m/s²). Gyroscope in x, y, z (degrees/second or radians/second). Optionally include a timestamp (milliseconds since start or boot time).
+
+Format and Output Data Consistently- Send one line per sample over the serial port using this exact format: timestamp, ax, ay, az, gx, gy, gz.
+Example: 5234, 0.01, -0.98, 0.05, 0.25, -1.00, 0.12
+Ensure there are - No extra spaces, or consistent comma+space like ", " (either is fine, as long as you're consistent). No headers or text in the serial output — just clean data.
+
+Use a Baud Rate of 115200 - Set the baud rate to 115200 in your microcontroller code to match the Python script.
+
+Output Continuously - Continuously stream sensor data over serial, even when idle. Gesture detection is handled in Python, so you don’t need to detect gestures on the microcontroller side.
+
+An example pseudocode:
+#include <Wire.h>
+#include <SomeIMULibrary.h>  // Replace with your actual IMU library
+
+IMU imu;
+
+void setup() {
+  Serial.begin(115200);
+  imu.begin();
+}
+
+void loop() {
+  static unsigned long lastSample = 0;
+  unsigned long now = millis();
+
+  if (now - lastSample >= 10) {  // 100 Hz => every 10ms
+    lastSample = now;
+
+    float ax, ay, az, gx, gy, gz;
+    imu.readAccel(&ax, &ay, &az);
+    imu.readGyro(&gx, &gy, &gz);
+
+    // Output in expected format
+    Serial.print(now); Serial.print(", ");
+    Serial.print(ax); Serial.print(", ");
+    Serial.print(ay); Serial.print(", ");
+    Serial.print(az); Serial.print(", ");
+    Serial.print(gx); Serial.print(", ");
+    Serial.print(gy); Serial.print(", ");
+    Serial.println(gz);
+  }
+}
+
+
+To use the wireless mode of gesture recognition, make sure the board is WiFi enabled. Import the necessary libraries and add the lines for setup. 
+Use the server port 5000 as used in the code. Run "ipconfig" in your terminal (for Windows) to find your PC's IP address. Use that in your Arduino code. 
+Give it the necessary SSID and Passwrod of the WiFi network that the PC is connected to. This way you can use WiFi to transmit IMU data for gesture recognition, with the real-time-gesture-recognition-wireless.py code.
+
+Your void loop should somewhat look like this:
+
+void loop() {
+  float ax, ay, az, gx, gy, gz;
+
+  // Replace these with real IMU readings
+  imu.readAcceleration(ax, ay, az);
+  imu.readGyroscope(gx, gy, gz);
+
+  // Create CSV-style string
+  String data = String(ax, 3) + "," + String(ay, 3) + "," + String(az, 3) + "," +
+                String(gx, 3) + "," + String(gy, 3) + "," + String(gz, 3) + "\n";
+
+  // Send data to server
+  if (client.connected()) {
+    client.print(data);
+  } else {
+    connectToHost();  // Reconnect if needed
+  }
+
+  delay(10); // 100 Hz sampling rate (adjust to match Python side)
+}
+
