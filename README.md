@@ -41,6 +41,8 @@ This project presents a proof of concept for a gesture-controlled drone swarm si
 - Arduino code (arduino-nano-33-iot-control.ino) directly converts the tilt of the hand to throttle, roll, pitch and yaw values for the control
 - On pressing G, the python code requests raw IMU values for gesture recogniton. Pressing G again will switch back to requesting throttle, roll, pitch and yaw values
 - Currently uses three gesture for 3 coordination modes - March, Scanner and Anchor
+
+![Coordination Logic](images/coordinations.jpeg)
   
 ### ─ `gesture_rnn_bilstm_model.keras`
 - **Purpose:** Pre-trained Keras model for gesture classification.
