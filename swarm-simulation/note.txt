@@ -1,0 +1,6 @@
+The arduino code provided was the code for Arduino Nano 33 IoT that comes with on-board LSM6DS3 6-axis IMU sensor.
+The code has to be adjusted if a different board and sensor is being used. But the logic of the code remains the same.
+Currently the code is needs Serial communication. As seen in the wireless gesture recognition code, the Serial communication can be replaced with wireless communication as well. 
+The model trained with data collected from Serial port can still work with the wireless communication as well. 
+But wireless communication will always have more latency than Serial communication. Hence prediction accuracy reduces. 
+So its better to train the model on data collected in the same way it is collected during real time application.
