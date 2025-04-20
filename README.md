@@ -49,7 +49,7 @@ This project presents a proof of concept for a gesture-controlled drone swarm si
   - Input: IMU sequence of shape `(100, 6)`
   - Output: Gesture class
 
-!(images/gestures3.png)
+![Gestures Trained](images/gestures3.png)
 
 ### ─ `README.md`
 - You're here!
